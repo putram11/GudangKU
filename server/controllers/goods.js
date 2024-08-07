@@ -1,4 +1,4 @@
-const { Good } = require("../models");
+const { Good, Category } = require("../models");
 
 class GoodsController {
   static async getAllGoods(req, res, next) {
@@ -6,7 +6,7 @@ class GoodsController {
       const goods = await Good.findAll({
         include: {
           model: Category,
-          attributes: ["name"], 
+          attributes: ["name"],
         },
       });
       res.status(200).json(goods);
@@ -14,7 +14,7 @@ class GoodsController {
       next(error);
     }
   }
-  
+
   static async createGood(req, res, next) {
     const { name, numberOfItems, price, CategoryId } = req.body;
     try {
@@ -26,6 +26,7 @@ class GoodsController {
       });
       res.status(201).json(newGood);
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }

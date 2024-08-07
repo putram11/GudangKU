@@ -10,8 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Good.belongsTo(models.Category, { foreignKey: "CategoryId" });
-      Good.hasMany(models.OutgoingGoods, { foreignKey: "goodId" });
-      Good.hasMany(models.IngoingGoods, { foreignKey: "goodId" });
     }
   }
   Good.init(
