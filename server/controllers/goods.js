@@ -1,8 +1,7 @@
 const { Good } = require("../models");
 
 class GoodsController {
-
-  static async createGood(req, res) {
+  static async createGood(req, res, next) {
     const { name, numberOfItems, price, CategoryId } = req.body;
     try {
       const newGood = await Good.create({
@@ -13,22 +12,20 @@ class GoodsController {
       });
       res.status(201).json(newGood);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      next(error);
     }
   }
- 
-  static async updateGood(req, res) {
+
+  static async updateGood(req, res, next) {
     const { id } = req.params;
     const { name, numberOfItems, price, CategoryId } = req.body;
     try {
       const good = await Good.findByPk(id);
-      if (!good) {
-        return res.status(404).json({ message: "Good not found" });
-      }
+      if (!good) throw { name: "NoDataProvided" };
       await good.update({ name, numberOfItems, price, CategoryId });
       res.status(200).json(good);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -36,13 +33,11 @@ class GoodsController {
     const { id } = req.params;
     try {
       const good = await Good.findByPk(id);
-      if (!good) {
-        return res.status(404).json({ message: "Good not found" });
-      }
+      if (!good) throw { name: "NoDataProvided" };
       await good.destroy();
       res.status(204).json({ message: "Good deleted successfully" });
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      next(error);
     }
   }
 }
