@@ -29,7 +29,7 @@ class UserController {
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      console.log(req.body)
+      console.log(req.body);
 
       if (!email || !password) throw { name: "InvalidInput" };
 
@@ -41,9 +41,7 @@ class UserController {
 
       const isPasswordValid = await comparePassword(password, user.password);
 
-      if (!isPasswordValid) {
-        throw error;
-      }
+      if (!isPasswordValid) throw { name: "InvalidInput" };
 
       const token = generateToken({
         id: user.id,
