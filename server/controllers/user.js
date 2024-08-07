@@ -5,16 +5,16 @@ const { generateToken } = require("../helpers/jsonwebtoken");
 class UserController {
   static async addUser(req, res, next) {
     try {
-      const { username, email, password, phoneNumber, address } = req.body;
+      const { email, password, name, position, phoneNumber } = req.body;
 
       if (!email || !password) throw { name: "InvalidInput" };
 
       const user = await User.create({
-        username,
         email,
         password,
+        name,
+        position,
         phoneNumber,
-        address,
       });
 
       const { password: _, ...userData } = user.toJSON();

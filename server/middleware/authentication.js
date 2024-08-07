@@ -2,7 +2,7 @@ const { verifyToken } = require("../helpers/jsonwebtoken");
 const { User } = require("../models");
 
 const authentication = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers["Authorization"];
 
   if (!authHeader) throw { name: "Unauthorized" };
 

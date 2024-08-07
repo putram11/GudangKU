@@ -3,9 +3,8 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const port = process.env.PORT || 3000;
-// require("dotenv").config();
 const express = require("express");
-const routes = require("./routes/index");
+const routes = require("./routes/router");
 const errorHandler = require("./middleware/errorHandler.js");
 const corsOptions = require("./middleware/cors");
 const app = express();
