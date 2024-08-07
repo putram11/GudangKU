@@ -3,6 +3,8 @@ import HomePage from "../views/HomePage";
 import LoginPage from "../views/LoginPage";
 import CreateGood from "../views/CreateGood";
 import UpdateGood from "../views/UpdateGood";
+import GoodList from "../views/GoodList";
+import RequestForm from "../views/RequestForm";
 
 
 
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   { 
+    path: "/good",
+    element: <GoodList />,
+  },
+  { 
+    path: "/form",
+    element: <RequestForm />,
+  },
+  { 
     path: "/goods-create",
     element: <CreateGood />,
   },
@@ -23,6 +33,7 @@ const router = createBrowserRouter([
     path: "/update/:id",
     element: <UpdateGood />,
   },
+
 ]);
 
 export default router;

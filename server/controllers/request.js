@@ -2,14 +2,11 @@ const { User, Good, Log } = require("../models");
 
 class RequestController {
   static async request(req, res, next) {
-    const { description, goods, type } = req.body;
-    const userId = req.user.id;
+    const { description, goods, type,  userId } = req.body;
 
     try {
-      const total = goods.reduce(
-        (acc, item) => acc + item.price * item.numberOfItems,
-        0
-      );
+      // Calculate total number of items in the request
+      const total = goods.reduce((acc, item) => acc + item.numberOfItems, 0);
 
       for (const item of goods) {
         const good = await Good.findOne({ where: { name: item.name } });
@@ -37,6 +34,7 @@ class RequestController {
 
       res.status(201).json(log);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

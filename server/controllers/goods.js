@@ -1,14 +1,31 @@
+const { Op } = require("sequelize");
 const { Good, Category } = require("../models");
 
 class GoodsController {
   static async getAllGoods(req, res, next) {
     try {
+      const { search, categoryId } = req.query; 
+
+      const whereConditions = {};
+
+      if (search) {
+        whereConditions.name = {
+          [Op.iLike]: `%${search}%`, 
+        };
+      }
+
+      if (categoryId) {
+        whereConditions.CategoryId = categoryId; 
+      }
+
       const goods = await Good.findAll({
+        where: whereConditions,
         include: {
           model: Category,
           attributes: ["name"],
         },
       });
+
       res.status(200).json(goods);
     } catch (error) {
       next(error);
@@ -26,7 +43,7 @@ class GoodsController {
       });
       res.status(201).json(newGood);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       next(error);
     }
   }
