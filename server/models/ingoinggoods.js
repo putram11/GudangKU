@@ -15,9 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   IngoingGoods.init(
     {
+      description: DataTypes.STRING,
       goodId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
       numberOfItems: DataTypes.INTEGER,
+      date: DataTypes.DATE
     },
     {
       sequelize,
