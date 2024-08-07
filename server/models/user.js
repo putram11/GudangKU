@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.OutgoingGoods, { foreignKey: "userId" });
-      User.hasMany(models.MasukBarang, { foreignKey: "userId" });
+      User.hasMany(models.IngoingGoods, { foreignKey: "userId" });
     }
   }
   User.init(
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      Name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       position: {
         type: DataTypes.STRING,
+        defaultValue: "Staff",
         allowNull: false,
         validate: {
           notNull: { msg: "Position is required" },

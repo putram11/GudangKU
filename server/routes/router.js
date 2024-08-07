@@ -6,9 +6,7 @@ const RequestController = require("../controllers/request");
 
 const authentication = require("../middleware/authentication");
 
-router.use("/user", userRouter);
-router.use("/pub", pubRouter);
-router.use("/categories", authentication, categoryRouter);
-router.use("/articles", authentication, articleRouter);
+router.post("/login", UserController.login);
+
 
 module.exports = router;

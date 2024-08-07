@@ -1,6 +1,20 @@
 const { Good } = require("../models");
 
 class GoodsController {
+  static async getAllGoods(req, res, next) {
+    try {
+      const goods = await Good.findAll({
+        include: {
+          model: Category,
+          attributes: ["name"], 
+        },
+      });
+      res.status(200).json(goods);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async createGood(req, res, next) {
     const { name, numberOfItems, price, CategoryId } = req.body;
     try {

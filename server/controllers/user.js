@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { comparePassword } = require("../helpers/bcrypt");
+const { comparePassword } = require("../helpers/brycpt");
 const { generateToken } = require("../helpers/jsonwebtoken");
 
 class UserController {
@@ -29,6 +29,7 @@ class UserController {
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
+      console.log(req.body)
 
       if (!email || !password) throw { name: "InvalidInput" };
 
@@ -49,7 +50,6 @@ class UserController {
         email: user.email,
         role: user.role,
       });
-
       res.status(200).json({ access_token: token, id: user.id });
     } catch (error) {
       next(error);
