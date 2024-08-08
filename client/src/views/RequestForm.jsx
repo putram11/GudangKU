@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { appRequest } from '../utils/axios'; // Adjust the path as needed
+import { useNavigate } from 'react-router-dom';
 
 const RequestForm = () => {
   const [description, setDescription] = useState('');
@@ -8,6 +9,8 @@ const RequestForm = () => {
   const [goodOptions, setGoodOptions] = useState([]);
   const [type, setType] = useState('outgoing'); // State for type
 
+  const navigate = useNavigate()
+  
   useEffect(() => {
     const fetchGoods = async () => {
       try {
@@ -38,6 +41,8 @@ const RequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
+
     const token = localStorage.getItem('token'); 
 
     console.log(token)
@@ -56,6 +61,7 @@ const RequestForm = () => {
       setMessage('Request submitted successfully!');
       setDescription('');
       setGoods([{ name: '', numberOfItems: '' }]);
+      navigate("/log")
     } catch (error) {
       console.error('Error submitting request:', error);
       setMessage('Failed to submit request. Please try again.');

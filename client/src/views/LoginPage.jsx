@@ -2,6 +2,7 @@ import { useState } from "react";
 import { appRequest } from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { FaWarehouse } from 'react-icons/fa';
+import { GoogleLogin } from "@react-oauth/google"; // Import GoogleLogin
 
 export default function LoginPage() {
   const [userData, setUserData] = useState({
@@ -19,7 +20,7 @@ export default function LoginPage() {
     });
   };
 
-  const navigate = useNavigate(); // Ensure useNavigate is imported and called here
+  const navigate = useNavigate();
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,6 +54,31 @@ export default function LoginPage() {
     } catch (error) {
       console.error(error);
       alert("Login failed. Please check your credentials and try again.");
+    }
+  };
+
+  const handleGoogleLoginSuccess = async (response) => {
+    try {
+      const { data } = await appRequest({
+        url: "/auth/google",
+        method: "POST",
+        data: { credential: response.credential },
+      });
+
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("role", data.role);
+
+      const role = localStorage.getItem("role");
+
+      if (role === "Admin") {
+        navigate("/good"); 
+      } else if (role === "Staff") {
+        navigate("/log");
+      }
+    } catch (error) {
+      console.error("Google login failed", error);
+      alert("Google login failed. Please try again.");
     }
   };
 
@@ -101,6 +127,15 @@ export default function LoginPage() {
             Sign In
           </button>
         </form>
+        <div className="mt-6 text-center">
+          <p className="text-gray-700 mb-4">Or sign in with Google</p>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 const { User } = require("../models");
 const { comparePassword } = require("../helpers/brycpt");
 const { generateToken } = require("../helpers/jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class UserController {
   static async addUser(req, res, next) {
@@ -48,10 +50,54 @@ class UserController {
         email: user.email,
         role: user.role,
       });
-      res.status(200).json({ access_token: token, id: user.id, role: user.position });
+      res
+        .status(200)
+        .json({ access_token: token, id: user.id, role: user.position });
     } catch (error) {
       next(error);
       console.log(error);
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const { credential } = req.body;
+
+      // Verify the Google token
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      const { email, name } = payload;
+
+      // Check if user exists in the database
+      let user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        user = await User.create({
+          email,
+          password: "123456",
+          name,
+          position: "Staff",
+          phoneNumber: "231231231231",
+        });
+      }
+
+      // Generate JWT token
+      const token = generateToken({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      });
+
+      res
+        .status(200)
+        .json({ access_token: token, id: user.id, role: user.position });
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   }
 }

@@ -9,6 +9,7 @@ const Authentication = require("../middleware/authentication");
 const AuthorizationAdmin = require("../middleware/AuthorizationAdmin");
 
 router.post("/login", UserController.login);
+router.post("/auth/google", UserController.googleLogin);
 router.get("/cat", CategoryController.getAllCategories);
 router.get("/goods", GoodsController.getAllGoods);
 router.get("/logs", RequestController.getAllLogs);

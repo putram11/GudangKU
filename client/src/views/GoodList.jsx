@@ -1,44 +1,40 @@
+// src/components/GoodsList.js
 import React, { useState, useEffect } from 'react';
-import { appRequest } from '../utils/axios'; // Adjust the path as needed
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGoods } from '../features/goods/goodsSlice';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { appRequest } from '../utils/axios'; 
 
 const GoodsList = () => {
-  const [goods, setGoods] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [categories, setCategories] = useState([]); 
   const [message, setMessage] = useState('');
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { goods, loading, error } = useSelector((store) => store.goods);
+
+  console.log(goods)
+
+  useEffect(() => {
+    dispatch(fetchGoods(search, selectedCategory ));
+  }, [search, selectedCategory]);
+
+  //
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await appRequest.get('/cat'); // Fetch categories
+        const response = await appRequest.get('/cat'); 
         setCategories(response.data);
       } catch (error) {
         setMessage('Failed to fetch categories');
       }
     };
 
-    const fetchGoods = async () => {
-      try {
-        const response = await appRequest.get('/goods', {
-          params: {
-            search,
-            categoryId: selectedCategory,
-          },
-        });
-        setGoods(response.data);
-      } catch (error) {
-        setMessage('Failed to fetch goods');
-      }
-    };
-
     fetchCategories();
-    fetchGoods();
-  }, [search, selectedCategory]);
+  }, []);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
@@ -68,9 +64,12 @@ const GoodsList = () => {
       <div className="container mx-auto p-4 bg-white rounded-lg shadow-lg border border-gray-200">
         <h2 className="text-3xl font-bold text-gray-700 mb-6">Goods List</h2>
         {message && (
-          <p className={`mb-4 ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
+          <p className={`mb-4 ${message.includes('Failed') ? 'text-red-500' : 'text-green-500'}`}>
             {message}
           </p>
+        )}
+        {error && (
+          <p className="mb-4 text-red-500">{error}</p>
         )}
         <div className="mb-6 flex gap-4">
           <input
@@ -93,36 +92,40 @@ const GoodsList = () => {
             ))}
           </select>
         </div>
-        <div className="space-y-4">
-          {goods.length ? (
-            goods.map((good) => (
-              <div key={good.id} className="bg-gray-200 p-4 rounded-lg flex justify-between items-center">
-                <div>
-                  <h3 className="text-xl font-semibold">{good.name}</h3>
-                  <p className="text-gray-700">Number of Items: {good.numberOfItems}</p>
-                  <p className="text-gray-700">Price: ${good.price}</p>
-                  <p className="text-gray-700">Category: {good.Category.name}</p>
+        {loading ? (
+          <p className="text-gray-700">Loading...</p>
+        ) : (
+          <div className="space-y-4">
+            {goods.length ? (
+              goods.map((good) => (
+                <div key={good.id} className="bg-gray-200 p-4 rounded-lg flex justify-between items-center">
+                  <div>
+                    <h3 className="text-xl font-semibold">{good.name}</h3>
+                    <p className="text-gray-700">Number of Items: {good.numberOfItems}</p>
+                    <p className="text-gray-700">Price: ${good.price}</p>
+                    <p className="text-gray-700">Category: {good.Category.name}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleUpdate(good.id)}
+                      className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(good.id)}
+                      className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleUpdate(good.id)}
-                    className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(good.id)}
-                    className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                  >
-                    <FaTrashAlt />
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-700">No goods available</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p className="text-gray-700">No goods available</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
