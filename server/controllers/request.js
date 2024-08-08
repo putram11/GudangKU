@@ -2,7 +2,7 @@ const { User, Good, Log } = require("../models");
 
 class RequestController {
   static async request(req, res, next) {
-    const { description, goods, type, userId } = req.body;
+    const { description, goods, type } = req.body;
 
     try {
       const total = goods.reduce((acc, item) => acc + item.numberOfItems, 0);
@@ -12,28 +12,27 @@ class RequestController {
         if (!good) throw { name: "NotFoundError" };
 
         if (type === "outgoing") {
-          if (good.numberOfItems < item.numberOfItems) {
-            return res
-              .status(400)
-              .json({ message: `Not enough items for ${item.name}` });
-          }
+          if (good.numberOfItems < item.numberOfItems)
+            throw { name: "No stock" };
           good.numberOfItems -= item.numberOfItems;
         } else if (type === "incoming") {
-          good.numberOfItems += item.numberOfItems;
+          Number(good.numberOfItems += item.numberOfItems);
         }
         await good.save();
       }
 
+
       const log = await Log.create({
-        description,
+        description,  
         goods,
+        type,
         total,
-        userId,
+        userId: req.user.id,
       });
 
       res.status(201).json(log);
     } catch (error) {
-      console.log(error);
+      console.log("ini error",error);
       next(error);
     }
   }

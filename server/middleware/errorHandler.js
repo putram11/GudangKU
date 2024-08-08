@@ -16,6 +16,10 @@ const errorHandler = (err, req, res, next) => {
       status = 401;
       message = "Please Provide The Data";
       break;
+    case "NoStock":
+      status = 401;
+      message = "No Stock Available";
+      break;
     case "Unauthorized":
       status = 401;
       message = "You are not authorized";

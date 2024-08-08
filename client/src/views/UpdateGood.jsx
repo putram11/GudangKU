@@ -26,6 +26,7 @@ const UpdateGood = () => {
     };
 
     const fetchGoodDetails = async () => {
+      const token = localStorage.getItem('token'); 
       try {
         const response = await appRequest.get(`/goods/${id}`);
         const { name, numberOfItems, price, categoryId } = response.data;
@@ -36,7 +37,7 @@ const UpdateGood = () => {
       } catch (error) {
         setMessage('Failed to fetch good details');
       } finally {
-        setLoading(false); // Set loading to false after data fetching is complete
+        setLoading(false); 
       }
     };
 

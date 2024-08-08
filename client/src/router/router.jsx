@@ -41,10 +41,6 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { 
-        path: "/good",
-        element: <GoodList />,
-      },
-      { 
         path: "/log",
         element: <LogsList />,
       },
@@ -52,13 +48,28 @@ const router = createBrowserRouter([
         path: "/form",
         element: <RequestForm />,
       },
-      { 
-        path: "/goods-create",
-        element: <CreateGood />,
-      },
-      { 
-        path: "/update/:id",
-        element: <UpdateGood />,
+      {
+        loader: () => {
+          const role = localStorage.getItem("role");
+          if (role !== "Admin") {
+            throw redirect("/log");
+          }
+          return null;
+        },
+        children: [
+          { 
+            path: "/good",
+            element: <GoodList />,
+          },
+          { 
+            path: "/goods-create",
+            element: <CreateGood />,
+          },
+          { 
+            path: "/update/:id",
+            element: <UpdateGood />,
+          },
+        ]
       },
     ],
   },

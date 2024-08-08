@@ -38,14 +38,15 @@ const RequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem('id'); 
+    const token = localStorage.getItem('token'); 
+
+    console.log(token)
 
     try {
       const response = await appRequest.post('/request', 
         { description,
           goods,
           type,
-          userId 
         }, {
           headers: {
             Authorization: `Bearer ${token}`, 
@@ -97,7 +98,7 @@ const RequestForm = () => {
               required
             >
               <option value="outgoing">Outgoing</option>
-              <option value="ingoing">Ingoing</option>
+              <option value="incoming">Incoming</option>
             </select>
           </div>
           {goods.map((good, index) => (
@@ -146,7 +147,7 @@ const RequestForm = () => {
           <button
             type="button"
             onClick={handleAddGood}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             Add Good
           </button>

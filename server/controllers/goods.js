@@ -4,18 +4,18 @@ const { Good, Category } = require("../models");
 class GoodsController {
   static async getAllGoods(req, res, next) {
     try {
-      const { search, categoryId } = req.query; 
+      const { search, categoryId } = req.query;
 
       const whereConditions = {};
 
       if (search) {
         whereConditions.name = {
-          [Op.iLike]: `%${search}%`, 
+          [Op.iLike]: `%${search}%`,
         };
       }
 
       if (categoryId) {
-        whereConditions.CategoryId = categoryId; 
+        whereConditions.CategoryId = categoryId;
       }
 
       const goods = await Good.findAll({
@@ -28,6 +28,25 @@ class GoodsController {
 
       res.status(200).json(goods);
     } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getGoodById(req, res, next) {
+    const { id } = req.params;
+    try {
+      const good = await Good.findByPk(id, {
+        include: {
+          model: Category,
+          attributes: ["name"],
+        },
+      });
+
+      if (!good) throw { name: "NotFoundError" };
+
+      res.status(200).json(good);
+    } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -53,7 +72,7 @@ class GoodsController {
     const { name, numberOfItems, price, CategoryId } = req.body;
     try {
       const good = await Good.findByPk(id);
-      if (!good) throw { name: "NoDataProvided" };
+      if (!good) throw { name: "NotFoundError" };
       await good.update({ name, numberOfItems, price, CategoryId });
       res.status(200).json(good);
     } catch (error) {
