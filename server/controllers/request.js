@@ -1,5 +1,6 @@
 const { User, Good, Log } = require("../models");
-const  emailjs  = require("emailjs-com");
+const emailjs = require("emailjs-com");
+global.XMLHttpRequest = require("xhr2");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Misalkan Anda menggunakan library Google Generative AI yang benar
@@ -56,12 +57,10 @@ class RequestController {
 
       Mohon konfirmasi penerimaan email ini. Jika ada pertanyaan, jangan ragu untuk menghubungi kami.`;
 
-      const result = await model.generateContent(prompt)
+      const result = await model.generateContent(prompt);
 
       const response = await result.response; // Adjust based on the actual response structure
-      const emailContent = response.text();
-      console.log(emailContent)
-      
+      const emailContent = response.text()
 
       // Send email using emailjs
       await emailjs.send(
@@ -72,12 +71,12 @@ class RequestController {
           message: emailContent,
           user_email: "putra.mahardika.17@gmail.com",
         },
-        "gFSJU4gxY50qbAO7x" // User ID from EmailJS
+        "gFSJU4gxY50qbAO7x",
       );
 
       res.status(200).json(log);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       next(error);
     }
   }

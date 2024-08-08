@@ -60,19 +60,16 @@ class UserController {
   }
 
   static async googleLogin(req, res, next) {
+    const { credential } = req.body;
+    console.log(credential)
     try {
-      const { credential } = req.body;
-
-      // Verify the Google token
       const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID,
       });
 
-      const payload = ticket.getPayload();
-      const { email, name } = payload;
+      const { email, name } = ticket.getPayload();
 
-      // Check if user exists in the database
       let user = await User.findOne({ where: { email } });
 
       if (!user) {
@@ -85,7 +82,6 @@ class UserController {
         });
       }
 
-      // Generate JWT token
       const token = generateToken({
         id: user.id,
         email: user.email,
