@@ -43,7 +43,14 @@ const GoodsList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       try {
-        await appRequest.delete(`/goods/${id}`);
+        await appRequest.delete(
+          `/goods/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
+        );
         setGoods(goods.filter((good) => good.id !== id));
         setMessage('Good deleted successfully!');
       } catch (error) {
@@ -53,7 +60,7 @@ const GoodsList = () => {
   };
 
   const handleUpdate = (id) => {
-    navigate(`/update-good/${id}`);
+    navigate(`/update/${id}`);
   };
 
   return (

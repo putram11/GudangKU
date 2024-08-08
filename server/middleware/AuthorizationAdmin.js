@@ -1,7 +1,7 @@
 const { verifyToken } = require("../helpers/jsonwebtoken");
 const { User } = require("../models");
 
-const Authentication = async (req, res, next) => {
+const AuthorizationAdmin = async (req, res, next) => {
   const authHeader = req.headers["Authorization"];
 
   if (!authHeader) throw { name: "Unauthorized" };
@@ -12,15 +12,20 @@ const Authentication = async (req, res, next) => {
 
   try {
     const decoded = verifyToken(token);
+
+    if (!decoded || !decoded.id) throw { name: "Unauthorized" };
+
     const user = await User.findByPk(decoded.id);
 
     if (!user) throw { name: "Unauthorized" };
 
-    req.user = user;
-    next();
+    if (user.role === "Admin") {
+      req.user = user;
+      return next();
+    }
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = Authentication;
+module.exports = AuthorizationAdmin;

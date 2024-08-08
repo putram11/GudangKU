@@ -19,7 +19,7 @@ export default function LoginPage() {
     });
   };
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Ensure useNavigate is imported and called here
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,15 +32,24 @@ export default function LoginPage() {
     }
 
     try {
-      let { data } = await appRequest({
+      const { data } = await appRequest({
         url: "/login",
         method: "POST",
         data: { email, password },
       });
+
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("id", data.id);
+      localStorage.setItem("role", data.role);
+
+      const role = localStorage.getItem("role");
+
+      if (role === "Admin") {
+        navigate("/good"); 
+      } else if (role === "Staff"){
+        navigate("/log"); 
+      }
       
-      navigate("/");
     } catch (error) {
       console.error(error);
       alert("Login failed. Please check your credentials and try again.");

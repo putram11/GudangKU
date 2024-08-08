@@ -5,15 +5,17 @@ const GoodsController = require("../controllers/goods");
 const CategoryController = require("../controllers/Categories");
 const RequestController = require("../controllers/request");
 
-const authentication = require("../middleware/authentication");
+const Authentication = require("../middleware/authentication");
+const AuthorizationAdmin = require("../middleware/AuthorizationAdmin");
+
 
 router.post("/login", UserController.login);
-router.post("/adduser", UserController.addUser);
-router.post("/request", RequestController.request);
-router.get("/goods", GoodsController.getAllGoods);
 router.get("/cat", CategoryController.getAllCategories);
-router.post("/create", GoodsController.createGood);
-router.put("/goods/:id", GoodsController.updateGood);
-router.delete("/goods/:id", GoodsController.deleteGood);
+router.get("/goods", GoodsController.getAllGoods);
+router.post("/request", Authentication, RequestController.request);
+router.post("/adduser", AuthorizationAdmin, UserController.addUser);
+router.post("/create", AuthorizationAdmin, GoodsController.createGood);
+router.put("/goods/:id", AuthorizationAdmin, GoodsController.updateGood);
+router.delete("/goods/:id", AuthorizationAdmin, GoodsController.deleteGood);
 
 module.exports = router;

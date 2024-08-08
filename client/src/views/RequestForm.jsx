@@ -38,10 +38,20 @@ const RequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem('id'); // Get userId from localStorage
+    const userId = localStorage.getItem('id'); 
 
     try {
-      const response = await appRequest.post('/request', { description, goods, type, userId });
+      const response = await appRequest.post('/request', 
+        { description,
+          goods,
+          type,
+          userId 
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
       setMessage('Request submitted successfully!');
       setDescription('');
       setGoods([{ name: '', numberOfItems: '' }]);

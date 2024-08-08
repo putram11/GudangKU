@@ -2,10 +2,9 @@ const { User, Good, Log } = require("../models");
 
 class RequestController {
   static async request(req, res, next) {
-    const { description, goods, type,  userId } = req.body;
+    const { description, goods, type, userId } = req.body;
 
     try {
-      // Calculate total number of items in the request
       const total = goods.reduce((acc, item) => acc + item.numberOfItems, 0);
 
       for (const item of goods) {
@@ -33,6 +32,16 @@ class RequestController {
       });
 
       res.status(201).json(log);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async getAllLogs(req, res, next) {
+    try {
+      const logs = await Log.findAll();
+      res.status(200).json(logs);
     } catch (error) {
       console.log(error);
       next(error);
