@@ -5,7 +5,6 @@ class GoodsController {
   static async getAllGoods(req, res, next) {
     try {
       const { search, categoryId } = req.query;
-      console.log(req.query)
       const whereConditions = {};
 
       if (search) {

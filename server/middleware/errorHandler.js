@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
       break;
     case "InvalidInput":
       status = 401;
-      message = "Please Insert your email and password";
+      message = "Invalid email or password";
       break;
     case "NoDataProvided":
       status = 401;

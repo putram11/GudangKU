@@ -60,7 +60,7 @@ class UserController {
   }
 
   static async googleLogin(req, res, next) {
-    const { credential } = req.body;
+    const {credential}  = req.body;
     console.log(credential)
     try {
       const ticket = await client.verifyIdToken({
