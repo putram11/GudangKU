@@ -2,7 +2,7 @@ import { useState } from "react";
 import { appRequest } from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { FaWarehouse } from 'react-icons/fa';
-import { GoogleLogin } from "@react-oauth/google"; // Import GoogleLogin
+import { GoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google"; 
 
 export default function LoginPage() {
   const [userData, setUserData] = useState({
@@ -60,22 +60,19 @@ export default function LoginPage() {
   const handleGoogleLoginSuccess = async (response) => {
     try {
       const { data } = await appRequest({
-        url: "/auth/google",
+        url: "/google-login",
         method: "POST",
         data: { credential: response.credential },
       });
-
+  
+      console.log('Login response data:', data);
+  
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("id", data.id);
       localStorage.setItem("role", data.role);
-
-      const role = localStorage.getItem("role");
-
-      if (role === "Admin") {
-        navigate("/good"); 
-      } else if (role === "Staff") {
-        navigate("/log");
-      }
+  
+      navigate("/log");
+      
     } catch (error) {
       console.error("Google login failed", error);
       alert("Google login failed. Please try again.");
@@ -129,7 +126,7 @@ export default function LoginPage() {
         </form>
         <div className="mt-6 text-center">
           <p className="text-gray-700 mb-4">Or sign in with Google</p>
-          <GoogleLogin
+          <GoogleLogin  
             onSuccess={handleGoogleLoginSuccess}
             onError={() => {
               console.log("Login Failed");

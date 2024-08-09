@@ -51,12 +51,17 @@ export default function Header() {
                 {userRole === 'Admin' && (
                   <>
                     <li>
-                      <Link to="/create-user" className="text-lg font-semibold hover:text-blue-300 transition-colors">
-                        Create User
+                      <Link to="/good" className="text-lg font-semibold hover:text-blue-300 transition-colors">
+                        Admin Dashboard
                       </Link>
                     </li>
                     <li>
-                      <Link to="/logs" className="text-lg font-semibold hover:text-blue-300 transition-colors">
+                      <Link to="/goods-create" className="text-lg font-semibold hover:text-blue-300 transition-colors">
+                        create
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/log" className="text-lg font-semibold hover:text-blue-300 transition-colors">
                         Logs
                       </Link>
                     </li>

@@ -7,7 +7,7 @@ const CreateGood = () => {
   const [name, setName] = useState('');
   const [numberOfItems, setNumberOfItems] = useState('');
   const [price, setPrice] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [category, setCategory] = useState(null); // Mengubah dari categoryId menjadi category (objek)
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState('');
 
@@ -38,7 +38,7 @@ const CreateGood = () => {
           name,
           numberOfItems,
           price,
-          categoryId,
+          categoryId: category ? category.id : '', // Menggunakan id dari objek kategori yang dipilih
         },
         {
           headers: {
@@ -47,7 +47,7 @@ const CreateGood = () => {
         }
       );
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         throw new Error('Something went wrong');
       }
 
@@ -55,8 +55,8 @@ const CreateGood = () => {
       setName('');
       setNumberOfItems('');
       setPrice('');
-      setCategoryId('');
-      navigate('/home'); 
+      setCategory(null); // Reset pilihan kategori
+      navigate('/good'); 
     } catch (error) {
       console.error('Error creating good:', error); 
       setMessage('Failed to create good. Please try again.');
@@ -129,8 +129,11 @@ const CreateGood = () => {
               id="categoryId"
               name="categoryId"
               className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
+              value={category ? category.id : ''} // Menggunakan id dari objek kategori yang dipilih
+              onChange={(e) => {
+                const selectedCategory = categories.find(cat => cat.id === parseInt(e.target.value));
+                setCategory(selectedCategory); // Menyimpan objek kategori yang dipilih
+              }}
               required
             >
               <option value="">Select a category</option>

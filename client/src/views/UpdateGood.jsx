@@ -71,7 +71,7 @@ const UpdateGood = () => {
       }
 
       setMessage('Good updated successfully!');
-      navigate('/home'); 
+      navigate('/good'); 
     } catch (error) {
       console.error('Error updating good:', error); 
       setMessage('Failed to update good. Please try again.');

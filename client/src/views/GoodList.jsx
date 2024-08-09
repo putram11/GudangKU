@@ -1,4 +1,3 @@
-// src/components/GoodsList.js
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGoods } from '../features/goods/goodsSlice';
@@ -15,13 +14,9 @@ const GoodsList = () => {
   const navigate = useNavigate();
   const { goods, loading, error } = useSelector((store) => store.goods);
 
-  console.log(goods)
-
   useEffect(() => {
-    dispatch(fetchGoods(search, selectedCategory ));
-  }, [search, selectedCategory]);
-
-  //
+    dispatch(fetchGoods(search, selectedCategory));
+  }, [search, selectedCategory, dispatch]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -37,17 +32,15 @@ const GoodsList = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
     if (window.confirm('Are you sure you want to delete this item?')) {
       try {
-        await appRequest.delete(
-          `/goods/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, 
-            },
-          }
-        );
-        setGoods(goods.filter((good) => good.id !== id));
+        await appRequest.delete(`/goods/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        dispatch(fetchGoods(search, selectedCategory)); // Refresh the goods list after deletion
         setMessage('Good deleted successfully!');
       } catch (error) {
         setMessage('Failed to delete good. Please try again.');
@@ -103,7 +96,7 @@ const GoodsList = () => {
                     <h3 className="text-xl font-semibold">{good.name}</h3>
                     <p className="text-gray-700">Number of Items: {good.numberOfItems}</p>
                     <p className="text-gray-700">Price: ${good.price}</p>
-                    <p className="text-gray-700">Category: {good.Category.name}</p>
+                    <p className="text-gray-700">Category: {good.Category?.name}</p>
                   </div>
                   <div className="flex gap-2">
                     <button
