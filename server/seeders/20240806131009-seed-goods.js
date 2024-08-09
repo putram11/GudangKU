@@ -8,7 +8,7 @@ module.exports = {
       return {
         name: el.name,
         numberOfItems: 300,
-        price: el.price * 10000, 
+        price: el.price, 
         CategoryId: el.CategoryId,
         createdAt: new Date(),
         updatedAt: new Date(),
