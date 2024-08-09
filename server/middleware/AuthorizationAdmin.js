@@ -1,8 +1,8 @@
 
 const AuthorizationAdmin = async (req, res, next) => {
   try {
-    console.log(req.user)
-    if (req.user.role === "Admin") {
+    console.log(req.user);
+    if (req.user.position === "Admin") {
       return next();
     } else {
       throw { name: "Forbidden" };

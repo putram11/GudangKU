@@ -16,27 +16,23 @@ router.get("/logs", RequestController.getAllLogs);
 router.post("/request", Authentication, RequestController.request);
 router.post(
   "/adduser",
-  Authentication,
-  AuthorizationAdmin,
+  Authentication, AuthorizationAdmin,
   UserController.addUser
 );
 router.post(
   "/create",
-  Authentication,
-  AuthorizationAdmin,
+  Authentication, AuthorizationAdmin,
   GoodsController.createGood
 );
 router.get("/goods/:id", GoodsController.getGoodById);
 router.put(
   "/goods/:id",
-  Authentication,
-  AuthorizationAdmin,
+  Authentication, AuthorizationAdmin,
   GoodsController.updateGood
 );
 router.delete(
   "/goods/:id",
-  Authentication,
-  AuthorizationAdmin,
+  Authentication, AuthorizationAdmin,
   GoodsController.deleteGood
 );
 
