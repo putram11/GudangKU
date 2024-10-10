@@ -1,4 +1,3 @@
-Here's a detailed README for your **Gudangku** project, tailored to provide a clear overview and showcase its features to potential clients.
 
 ---
 
