@@ -1,12 +1,12 @@
-const { Category , Good } = require("../models");
+const { Category, Good } = require('../models');
 
 class CategoryController {
   static async getAllCategories(req, res, next) {
     try {
-      const category = await Category.findAll({
+      const categories = await Category.findAll({
         include: {
           model: Good,
-          attributes: ["name"],
+          attributes: ['name'],
         },
       });
       res.status(200).json(category);
