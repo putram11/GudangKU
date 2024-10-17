@@ -1,14 +1,12 @@
-
 const AuthorizationAdmin = async (req, res, next) => {
   try {
-    console.log(req.user);
-    if (req.user.position === "Admin") {
-      return next();
-    } else {
-      throw { name: "Forbidden" };
-    }
+    // Mengecek apakah user memiliki posisi 'Admin'
+    if (req.user && req.user.position === 'Admin') {
+      return next(); // Melanjutkan jika user adalah admin
+    } 
+    throw { name: 'Forbidden', message: 'Access denied: Admins only' }; // Jika bukan admin, lempar error
   } catch (error) {
-    next(error);
+    next(error); // Meneruskan error ke middleware penanganan error
   }
 };
 
