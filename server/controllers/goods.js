@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
-const { Good, Category } = require("../models");
+const { Op } = require('sequelize');
+const { Good, Category } = require('../models');
 
 class GoodsController {
   static async getAllGoods(req, res, next) {
@@ -7,12 +7,14 @@ class GoodsController {
       const { search, categoryId } = req.query;
       const whereConditions = {};
 
+      // Search by name using iLike for case-insensitive matching
       if (search) {
         whereConditions.name = {
           [Op.iLike]: `%${search}%`,
         };
       }
 
+      // Filter by category if provided
       if (categoryId) {
         whereConditions.CategoryId = categoryId;
       }
@@ -21,58 +23,65 @@ class GoodsController {
         where: whereConditions,
         include: {
           model: Category,
-          attributes: ["name"],
+          attributes: ['name'],
         },
       });
 
       res.status(200).json(goods);
-
     } catch (error) {
       next(error);
     }
   }
 
   static async getGoodById(req, res, next) {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
+
       const good = await Good.findByPk(id, {
         include: {
           model: Category,
-          attributes: ["name"],
+          attributes: ['name'],
         },
       });
 
-      if (!good) throw { name: "NotFoundError" };
+      if (!good) {
+        throw { name: 'NotFoundError', message: 'Good not found' };
+      }
 
       res.status(200).json(good);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 
   static async createGood(req, res, next) {
-    const { name, numberOfItems, price, CategoryId } = req.body;
     try {
+      const { name, numberOfItems, price, CategoryId } = req.body;
+
       const newGood = await Good.create({
         name,
         numberOfItems,
         price,
         CategoryId,
       });
+
       res.status(201).json(newGood);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 
   static async updateGood(req, res, next) {
-    const { id } = req.params;
-    const { name, numberOfItems, price, CategoryId } = req.body;
     try {
+      const { id } = req.params;
+      const { name, numberOfItems, price, CategoryId } = req.body;
+
       const good = await Good.findByPk(id);
-      if (!good) throw { name: "NotFoundError" };
+
+      if (!good) {
+        throw { name: 'NotFoundError', message: 'Good not found' };
+      }
+
       await good.update({ name, numberOfItems, price, CategoryId });
       res.status(200).json(good);
     } catch (error) {
@@ -80,13 +89,18 @@ class GoodsController {
     }
   }
 
-  static async deleteGood(req, res) {
-    const { id } = req.params;
+  static async deleteGood(req, res, next) {
     try {
+      const { id } = req.params;
+
       const good = await Good.findByPk(id);
-      if (!good) throw { name: "NoDataProvided" };
+
+      if (!good) {
+        throw { name: 'NoDataProvided', message: 'Good not found' };
+      }
+
       await good.destroy();
-      res.status(204).json({ message: "Good deleted successfully" });
+      res.status(204).json({ message: 'Good deleted successfully' });
     } catch (error) {
       next(error);
     }
